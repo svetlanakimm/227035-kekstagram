@@ -113,30 +113,35 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side + this._ctx.lineWidth,
-          this._resizeConstraint.side + this._ctx.lineWidth);
-
-        var halfResizeSide = this._resizeConstraint.side / 2 + this._ctx.lineWidth;
-        var text = this._resizeConstraint.side + 'x' + this._resizeConstraint.side;
+        this._ctx.strokeRect(
+            (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+            (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+            this._resizeConstraint.side - this._ctx.lineWidth / 2,
+            this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
         this._ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
 
         this._ctx.beginPath();
-
-        this._ctx.rect(displX, displY, this._container.width, this._container.height);
-        this._ctx.moveTo(- halfResizeSide, - halfResizeSide);
-        this._ctx.lineTo(- halfResizeSide,  halfResizeSide);
-        this._ctx.lineTo( halfResizeSide,  halfResizeSide);
-        this._ctx.lineTo( halfResizeSide , - halfResizeSide);
+        // Отрисовка внешнего прямоугольника
+        this._ctx.rect(-this._container.width / 2, -this._container.height / 2, this._container.width, this._container.height);
+        // Отрисовка внутреннего прямоугольника
+        this._ctx.rect(
+            (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+            (-this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+            this._resizeConstraint.side + this._ctx.lineWidth / 2,
+            this._resizeConstraint.side + this._ctx.lineWidth / 2
+        );
 
         this._ctx.fill('evenodd');
-
+        // Отрисовка текста
+        var text = this._image.naturalWidth + 'x' + this._image.naturalHeight;
         this._ctx.fillStyle = 'rgb(255,255,255)';
-        this._ctx.fillText( text, - this._ctx.measureText(text).width / 2 , - halfResizeSide - 5 );
+        this._ctx.fillText( text, - this._ctx.measureText(text).width / 2 , - this._resizeConstraint.side / 2 - 10 );
         this._ctx.closePath();
+
+
+
+
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
