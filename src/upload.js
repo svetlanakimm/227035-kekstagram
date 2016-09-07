@@ -72,28 +72,28 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-      var resizeX = document.querySelector('#resize-x');
-      var resizeY = document.querySelector('#resize-y');
-      var resizeSize = document.querySelector('#resize-size');
-      var resizeButtonFwd = document.querySelector('#resize-fwd');
+    var resizeX = document.querySelector('#resize-x');
+    var resizeY = document.querySelector('#resize-y');
+    var resizeSize = document.querySelector('#resize-size');
+    var resizeButtonFwd = document.querySelector('#resize-fwd');
 
-      if( !(
+    if( !(
           ( +resizeX.value >= 0 && +resizeY.value >= 0 ) &&
           ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
           ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
-          )){
-          resizeButtonFwd.disabled = true;
-          return false;
+          )) {
+        resizeButtonFwd.disabled = true;
+        return false;
       }else{
-          resizeButtonFwd.disabled = false;
-          return true;
+        resizeButtonFwd.disabled = false;
+        return true;
       }
   }
     /**
      * Обработчик события при изменении полей ввода
      */
-  document.querySelector('.upload-resize-controls').onchange = function(){
-          resizeFormIsValid();
+  document.querySelector('.upload-resize-controls').onchange = function() {
+    resizeFormIsValid();
   };
 
 
