@@ -82,12 +82,12 @@
           ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
           ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
           )) {
-        resizeButtonFwd.disabled = true;
-        return false;
-      }else{
-        resizeButtonFwd.disabled = false;
-        return true;
-      }
+      resizeButtonFwd.disabled = true;
+      return false;
+    }else{
+      resizeButtonFwd.disabled = false;
+      return true;
+    }
   }
     /**
      * Обработчик события при изменении полей ввода
