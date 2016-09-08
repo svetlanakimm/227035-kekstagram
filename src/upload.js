@@ -95,7 +95,7 @@
   /**
    * Обработчик события при изменении полей ввода
    */
-  document.querySelectorAll('.upload-resize-controls').forEach( function(form, i, forms) {
+  document.querySelectorAll('.upload-resize-controls').forEach( function(form) {
     form.onchange = resizeFormIsValid;
   });
 
