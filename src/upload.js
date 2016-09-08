@@ -72,29 +72,33 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+    console.log('resizeFormIsValid');
     var resizeX = document.querySelector('#resize-x');
     var resizeY = document.querySelector('#resize-y');
     var resizeSize = document.querySelector('#resize-size');
     var resizeButtonFwd = document.querySelector('#resize-fwd');
 
     if( !(
-          ( +resizeX.value >= 0 && +resizeY.value >= 0 ) &&
+          ( +resizeX.value >= 0 && +resizeY.value >= 0 && +resizeSize.value >= 0 ) &&
           ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
           ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
           )) {
       resizeButtonFwd.disabled = true;
+      console.log('if');
       return false;
     }else{
+      console.log('else');
       resizeButtonFwd.disabled = false;
       return true;
     }
   }
-    /**
-     * Обработчик события при изменении полей ввода
-     */
-  document.querySelector('.upload-resize-controls').onchange = function() {
-    resizeFormIsValid();
-  };
+  /**
+   * Обработчик события при изменении полей ввода
+   */
+  var forms = document.querySelectorAll('.upload-resize-controls');
+  forms.forEach( function(form, i, forms) {
+      form.onchange = resizeFormIsValid;
+  });
 
 
   /**
