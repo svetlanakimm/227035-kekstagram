@@ -72,7 +72,6 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    console.log('resizeFormIsValid');
     var resizeX = document.querySelector('#resize-x');
     var resizeY = document.querySelector('#resize-y');
     var resizeSize = document.querySelector('#resize-size');
@@ -84,10 +83,8 @@
           ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
           )) {
       resizeButtonFwd.disabled = true;
-      console.log('if');
       return false;
     }else{
-      console.log('else');
       resizeButtonFwd.disabled = false;
       return true;
     }
@@ -95,7 +92,9 @@
   /**
    * Обработчик события при изменении полей ввода
    */
-  document.querySelectorAll('.upload-resize-controls').forEach( function(form) {
+  var formsList = document.querySelectorAll('.upload-resize-controls'); // returns NodeList
+  var formsArray = Array.prototype.slice.call(formsList); // преобразует NodeList в Array
+  formsArray.forEach( function(form) {
     form.onchange = resizeFormIsValid;
   });
 
