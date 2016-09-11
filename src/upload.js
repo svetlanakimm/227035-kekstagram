@@ -7,6 +7,8 @@
 
 'use strict';
 
+var browserCookies = require('browser-cookies');
+
 (function() {
   /** @enum {string} */
   var FileType = {
@@ -240,6 +242,11 @@
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
   };
+
+  /**
+   * Сохранение выбранного фильтра по умолчанию
+   */
+  var defaultFilter;
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
