@@ -158,6 +158,25 @@ var browserCookies = require('browser-cookies');
     uploadMessage.classList.add('invisible');
   }
 
+  function setFilter(filter) {
+    if (!filterMap) {
+      // Ленивая инициализация. Объект не создается до тех пор, пока
+      // не понадобится прочитать его в первый раз, а после этого запоминается
+      // навсегда.
+      filterMap = {
+        'none': 'filter-none',
+        'chrome': 'filter-chrome',
+        'sepia': 'filter-sepia',
+        'marvin': 'filter-marvin'
+      };
+    }
+
+    // Класс перезаписывается, а не обновляется через classList потому что нужно
+    // убрать предыдущий примененный класс. Для этого нужно или запоминать его
+    // состояние или просто перезаписывать.
+    filterImage.className = 'filter-image-preview ' + filterMap[filter];
+  }
+
   /**
    * Обработчик изменения изображения в форме загрузки. Если загруженный
    * файл является изображением, считывается исходник картинки, создается
@@ -231,6 +250,12 @@ var browserCookies = require('browser-cookies');
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+
+      var defaultFilter = browserCookies.get('upload-filter');
+      if (defaultFilter) {
+        document.querySelector('#upload-filter-' + defaultFilter).checked = true;
+        setFilter(defaultFilter);
+      }
     }
   };
 
@@ -266,10 +291,8 @@ var browserCookies = require('browser-cookies');
     else{
       lastBDay = new Date(currentYear-1, 11, 9);
     }
-    var daysOfLastBDay = Math.floor((now.getTime() - lastBDay.getTime()) / 1000 / 60 / 60 / 24);
-    return daysOfLastBDay;
+    return Math.floor((now.getTime() - lastBDay.getTime()) / 1000 / 60 / 60 / 24);
   }
-
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -291,26 +314,11 @@ var browserCookies = require('browser-cookies');
    * выбранному значению в форме.
    */
   filterForm.onchange = function() {
-    if (!filterMap) {
-      // Ленивая инициализация. Объект не создается до тех пор, пока
-      // не понадобится прочитать его в первый раз, а после этого запоминается
-      // навсегда.
-      filterMap = {
-        'none': 'filter-none',
-        'chrome': 'filter-chrome',
-        'sepia': 'filter-sepia',
-        'marvin': 'filter-marvin'
-      };
-    }
-
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
 
-    // Класс перезаписывается, а не обновляется через classList потому что нужно
-    // убрать предыдущий примененный класс. Для этого нужно или запоминать его
-    // состояние или просто перезаписывать.
-    filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+    setFilter(selectedFilter);
 
     // записать текущий фильтр в куки
     browserCookies.set('upload-filter', selectedFilter, { expires: getDaysFromLastHoppersBDay() });
