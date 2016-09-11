@@ -74,29 +74,31 @@ var browserCookies = require('browser-cookies');
    * @return {boolean}
    */
   function resizeFormIsValid() {
-      var resizeX = document.querySelector('#resize-x');
-      var resizeY = document.querySelector('#resize-y');
-      var resizeSize = document.querySelector('#resize-size');
-      var resizeButtonFwd = document.querySelector('#resize-fwd');
+    var resizeX = document.querySelector('#resize-x');
+    var resizeY = document.querySelector('#resize-y');
+    var resizeSize = document.querySelector('#resize-size');
+    var resizeButtonFwd = document.querySelector('#resize-fwd');
 
-      if( !(
-          ( +resizeX.value >= 0 && +resizeY.value >= 0 ) &&
+    if( !(
+          ( +resizeX.value >= 0 && +resizeY.value >= 0 && +resizeSize.value >= 0 ) &&
           ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
           ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
-          )){
-          resizeButtonFwd.disabled = true;
-          return false;
-      }else{
-          resizeButtonFwd.disabled = false;
-          return true;
-      }
+          )) {
+      resizeButtonFwd.disabled = true;
+      return false;
+    }else{
+      resizeButtonFwd.disabled = false;
+      return true;
+    }
   }
-    /**
-     * Обработчик события при изменении полей ввода
-     */
-  document.querySelector('.upload-resize-controls').onchange = function(){
-          resizeFormIsValid();
-  };
+  /**
+   * Обработчик события при изменении полей ввода
+   */
+  var formsList = document.querySelectorAll('.upload-resize-controls'); // returns NodeList
+  var formsArray = Array.prototype.slice.call(formsList); // преобразует NodeList в Array
+  formsArray.forEach( function(form) {
+    form.onchange = resizeFormIsValid;
+  });
 
 
   /**
