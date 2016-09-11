@@ -248,7 +248,28 @@ var browserCookies = require('browser-cookies');
   /**
    * Сохранение выбранного фильтра по умолчанию
    */
-  var defaultFilter;
+//  var defaultFilter = browserCookies.get('upload-filter');//последний выбранный фильтр
+//  console.log(defaultFilter);
+
+  /**
+   * Количество дней с последнего прошедшего дня рождения Грейс Хоппер
+   */
+  function getDaysFromLastHoppersBDay(){
+
+    var currentYear = new Date().getFullYear();
+    var currentBDay = new Date(currentYear, 11, 9);
+    var now = new Date();
+    var lastBDay;
+    if(now - currentBDay >= 0){
+      lastBDay = currentBDay;
+    }
+    else{
+      lastBDay = new Date(currentYear-1, 11, 9);
+    }
+    var daysOfLastBDay = Math.floor((now.getTime() - lastBDay.getTime()) / 1000 / 60 / 60 / 24);
+    return daysOfLastBDay;
+  }
+
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -290,6 +311,9 @@ var browserCookies = require('browser-cookies');
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+
+    // записать текущий фильтр в куки
+    browserCookies.set('upload-filter', selectedFilter, { expires: getDaysFromLastHoppersBDay() });
   };
 
   cleanupResizer();
