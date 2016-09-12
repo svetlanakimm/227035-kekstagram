@@ -279,17 +279,16 @@ var browserCookies = require('browser-cookies');
   /**
    * Количество дней с последнего прошедшего дня рождения Грейс Хоппер
    */
-  function getDaysFromLastHoppersBDay(){
+  function getDaysFromLastHoppersBDay() {
 
     var currentYear = new Date().getFullYear();
     var currentBDay = new Date(currentYear, 11, 9);
     var now = new Date();
     var lastBDay;
-    if(now - currentBDay >= 0){
+    if(now - currentBDay >= 0) {
       lastBDay = currentBDay;
-    }
-    else{
-      lastBDay = new Date(currentYear-1, 11, 9);
+    } else {
+      lastBDay = new Date(currentYear - 1, 11, 9);
     }
     return Math.floor((now.getTime() - lastBDay.getTime()) / 1000 / 60 / 60 / 24);
   }
