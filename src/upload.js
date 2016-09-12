@@ -7,6 +7,8 @@
 
 'use strict';
 
+var browserCookies = require('browser-cookies');
+
 (function() {
   /** @enum {string} */
   var FileType = {
@@ -156,6 +158,25 @@
     uploadMessage.classList.add('invisible');
   }
 
+  function setFilter(filter) {
+    if (!filterMap) {
+      // Ленивая инициализация. Объект не создается до тех пор, пока
+      // не понадобится прочитать его в первый раз, а после этого запоминается
+      // навсегда.
+      filterMap = {
+        'none': 'filter-none',
+        'chrome': 'filter-chrome',
+        'sepia': 'filter-sepia',
+        'marvin': 'filter-marvin'
+      };
+    }
+
+    // Класс перезаписывается, а не обновляется через classList потому что нужно
+    // убрать предыдущий примененный класс. Для этого нужно или запоминать его
+    // состояние или просто перезаписывать.
+    filterImage.className = 'filter-image-preview ' + filterMap[filter];
+  }
+
   /**
    * Обработчик изменения изображения в форме загрузки. Если загруженный
    * файл является изображением, считывается исходник картинки, создается
@@ -229,6 +250,12 @@
 
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
+
+      var defaultFilter = browserCookies.get('upload-filter');
+      if (defaultFilter) {
+        document.querySelector('#upload-filter-' + defaultFilter).checked = true;
+        setFilter(defaultFilter);
+      }
     }
   };
 
@@ -242,6 +269,29 @@
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
   };
+
+  /**
+   * Сохранение выбранного фильтра по умолчанию
+   */
+//  var defaultFilter = browserCookies.get('upload-filter');//последний выбранный фильтр
+//  console.log(defaultFilter);
+
+  /**
+   * Количество дней с последнего прошедшего дня рождения Грейс Хоппер
+   */
+  function getDaysFromLastHoppersBDay() {
+
+    var currentYear = new Date().getFullYear();
+    var currentBDay = new Date(currentYear, 11, 9);
+    var now = new Date();
+    var lastBDay;
+    if(now - currentBDay >= 0) {
+      lastBDay = currentBDay;
+    } else {
+      lastBDay = new Date(currentYear - 1, 11, 9);
+    }
+    return Math.floor((now.getTime() - lastBDay.getTime()) / 1000 / 60 / 60 / 24);
+  }
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -263,26 +313,12 @@
    * выбранному значению в форме.
    */
   filterForm.onchange = function() {
-    if (!filterMap) {
-      // Ленивая инициализация. Объект не создается до тех пор, пока
-      // не понадобится прочитать его в первый раз, а после этого запоминается
-      // навсегда.
-      filterMap = {
-        'none': 'filter-none',
-        'chrome': 'filter-chrome',
-        'sepia': 'filter-sepia',
-        'marvin': 'filter-marvin'
-      };
-    }
+    var selectedFilter = document.querySelector('input[name=upload-filter]:checked');
 
-    var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
-      return item.checked;
-    })[0].value;
+    setFilter(selectedFilter);
 
-    // Класс перезаписывается, а не обновляется через classList потому что нужно
-    // убрать предыдущий примененный класс. Для этого нужно или запоминать его
-    // состояние или просто перезаписывать.
-    filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+    // записать текущий фильтр в куки
+    browserCookies.set('upload-filter', selectedFilter, { expires: getDaysFromLastHoppersBDay() });
   };
 
   cleanupResizer();
