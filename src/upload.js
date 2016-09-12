@@ -313,9 +313,7 @@ var browserCookies = require('browser-cookies');
    * выбранному значению в форме.
    */
   filterForm.onchange = function() {
-    var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
-      return item.checked;
-    })[0].value;
+    var selectedFilter = document.querySelector('input[name=upload-filter]:checked');
 
     setFilter(selectedFilter);
 
