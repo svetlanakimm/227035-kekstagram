@@ -19,6 +19,8 @@ module.exports = {
 
   entry: path.resolve(projectRoot, SRC_DIRNAME, 'main.js'),
 
+  watch: true,
+
   output: {
     filename: 'js/main.js',
     path: path.resolve(projectRoot, OUTPUT_DIRNAME),
