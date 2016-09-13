@@ -1,8 +1,8 @@
 'use strict';
 
 (function() {
-  const imagesWidth = 182;
-  const imagesHeight = 182;
+  var IMAGES_WIDTH = 182;
+  var IMAGES_HEIGHT = 182;
 
   window.pictures = [];
 
@@ -28,8 +28,8 @@
     img.onload = function() {
       var imgElement = pictureElem.querySelector('img');
       imgElement.src = this.src;
-      imgElement.width = imagesWidth;
-      imgElement.height = imagesHeight;
+      imgElement.width = IMAGES_WIDTH;
+      imgElement.height = IMAGES_HEIGHT;
     };
     img.onerror = function() {
       pictureElem.classList.add('picture-load-failure');
@@ -49,7 +49,7 @@
       elementToClone = template.querySelector('.picture');
     }
 
-    window.pictures.forEach(function (picture){
+    window.pictures.forEach(function(picture) {
       appendPicture(picture, picturesContainer, elementToClone);
     });
 
