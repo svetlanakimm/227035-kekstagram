@@ -3,17 +3,18 @@
 (function() {
   var pictures;
 
-  function JSONPRequest(url, callback) {
+  function jSONPRequest(url, callback) {
     var script = document.createElement('script');
     script.src = url + '?callback=JSONPCallback';
     window.JSONPCallback = function(data) {
       console.log(data);
+      console.log(pictures);
       callback(data);
     };
     document.head.appendChild(script);
   }
 
-  JSONPRequest('/api/pictures', function(data) {
+  jSONPRequest('/api/pictures', function(data) {
     pictures = data;
   });
 })();
