@@ -1,7 +1,7 @@
 'use strict';
 
 (function() {
-  var pictures;
+  window.pictures = [];
 
   function jSONPRequest(url, callback) {
     var script = document.createElement('script');
@@ -13,6 +13,6 @@
   }
 
   jSONPRequest('/api/pictures', function(data) {
-    pictures = data;
+    window.pictures = data;
   });
 })();
