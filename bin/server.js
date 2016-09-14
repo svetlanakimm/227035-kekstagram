@@ -37,9 +37,9 @@ app.use(middleware);
 app.
   get('/api/pictures', (req, res) => {
     if (!isJSONPRequest(req)) {
-      res.sendStatus(404);
-      return;
-    }
+  res.sendStatus(404);
+  return;
+}
 
     let dataFile = path.resolve(__dirname, DATA_DIR, DATA_FILE);
     fs.readFile(dataFile, 'utf-8', (err, data) => {
