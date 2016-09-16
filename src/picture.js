@@ -4,7 +4,7 @@
 
 'use strict';
 
-define(function() {
+define(['./gallery'], function(gallery) {
   var IMAGES_WIDTH = 182;
   var IMAGES_HEIGHT = 182;
 
@@ -18,7 +18,7 @@ define(function() {
     elementToClone = template.querySelector('.picture');
   }
 
-  function appendPicture(picture) {
+  function appendPicture(picture, pictureNumber) {
     var pictureElem = elementToClone.cloneNode(true);
     pictureElem.href = picture.url;
     pictureElem.querySelector('.picture-comments').textContent = picture.comments;
@@ -30,6 +30,13 @@ define(function() {
       imgElement.src = this.src;
       imgElement.width = IMAGES_WIDTH;
       imgElement.height = IMAGES_HEIGHT;
+
+      imgElement.onclick = function(ev) {
+        gallery.show(pictureNumber);
+        // gallery.setActivePicture(pictureNumber);  // redundant
+
+        ev.preventDefault();
+      };
     };
     img.onerror = function() {
       pictureElem.classList.add('picture-load-failure');

@@ -1,16 +1,19 @@
 'use strict';
 
-define(['./load', './picture'], function(load, renderPicture) {
+define(['./load', './picture', './gallery'], function(load, renderPicture, gallery) {
   var filter = document.querySelector('.filters');
   filter.classList.add('hidden');
 
   function renderPictures(pictures) {
-    pictures.forEach(function(picture) {
-      renderPicture(picture);
+    pictures.forEach(function(picture, i) {
+      renderPicture(picture, i);
     });
 
     filter.classList.remove('hidden');
   }
 
-  load('/api/pictures', renderPictures);
+  load('/api/pictures', function(data) {
+    renderPictures(data);
+    gallery.setPictures(data);
+  });
 });
