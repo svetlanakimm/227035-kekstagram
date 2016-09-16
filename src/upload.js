@@ -1,5 +1,3 @@
-/* global Resizer: true */
-
 /**
  * @fileoverview
  * @author Igor Alexeenko (o0)
@@ -7,9 +5,7 @@
 
 'use strict';
 
-var browserCookies = require('browser-cookies');
-
-(function() {
+define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -313,7 +309,7 @@ var browserCookies = require('browser-cookies');
    * выбранному значению в форме.
    */
   filterForm.onchange = function() {
-    var selectedFilter = document.querySelector('input[name=upload-filter]:checked');
+    var selectedFilter = document.querySelector('input[name=upload-filter]:checked').value;
 
     setFilter(selectedFilter);
 
@@ -323,4 +319,4 @@ var browserCookies = require('browser-cookies');
 
   cleanupResizer();
   updateBackground();
-})();
+});
