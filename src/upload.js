@@ -69,12 +69,12 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
-  function resizeFormIsValid() {
-    var resizeX = document.querySelector('#resize-x');
-    var resizeY = document.querySelector('#resize-y');
-    var resizeSize = document.querySelector('#resize-size');
-    var resizeButtonFwd = document.querySelector('#resize-fwd');
+  var resizeX = document.querySelector('#resize-x');
+  var resizeY = document.querySelector('#resize-y');
+  var resizeSize = document.querySelector('#resize-size');
+  var resizeButtonFwd = document.querySelector('#resize-fwd');
 
+  function resizeFormIsValid() {
     if( !(
           ( +resizeX.value >= 0 && +resizeY.value >= 0 && +resizeSize.value >= 0 ) &&
           ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
@@ -83,6 +83,8 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
       resizeButtonFwd.disabled = true;
       return false;
     }else{
+      // valid
+      currentResizer.setConstraint(+resizeX.value, +resizeY.value, +resizeSize.value);
       resizeButtonFwd.disabled = false;
       return true;
     }
@@ -315,6 +317,13 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
 
     // записать текущий фильтр в куки
     browserCookies.set('upload-filter', selectedFilter, { expires: getDaysFromLastHoppersBDay() });
+  });
+
+  window.addEventListener('resizerchange', function(evt) {
+    var constraint = currentResizer.getConstraint();
+    resizeX.value = constraint.x;
+    resizeY.value = constraint.y;
+    resizeSize.value = constraint.side;
   });
 
   cleanupResizer();
