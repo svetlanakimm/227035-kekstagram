@@ -36,10 +36,16 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     }
   }
 
-  window.addEventListener('scroll', function(evt) {
+  var scrollTimeout;
+  function loadOtherPictures() {
     if (footer.getBoundingClientRect().bottom - window.innerHeight < GAP) {
       loadPictures(pageNumber++);
     }
+  }
+
+  window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(loadOtherPictures, 100);
   });
 
   filter.addEventListener('change', function(evt) {
