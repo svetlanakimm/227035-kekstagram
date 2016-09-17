@@ -5,26 +5,23 @@
 'use strict';
 
 define(function() {
-  function load(url, callback) {
+  function load(url, params, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
+
     xhr.onload = function(evt) {
       var requestObj = evt.target;
       var response = requestObj.response;
       var data = JSON.parse(response);
       callback(data);
     };
+
+    xhr.open('GET', url +
+      '?from=' + (params.from || 0) +
+      '&to=' + (params.to || Infinity) +
+      '&filter=' + (params.filter || 'default')
+    );
+
     xhr.send();
   }
-
-  function jSONPRequest(url, callback) {
-    var script = document.createElement('script');
-    script.src = url + '?callback=JSONPCallback';
-    window.JSONPCallback = function(data) {
-      callback(data);
-    };
-    document.head.appendChild(script);
-  }
-
   return load;
 });

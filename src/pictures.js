@@ -14,8 +14,9 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     filter.classList.remove('hidden');
   }
 
-  load('/api/pictures', function(data) {
+  load('/api/pictures', {}, function(data) {
     renderPictures(data);
     gallery.setPictures(data);
   });
 });
+
