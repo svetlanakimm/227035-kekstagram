@@ -8,8 +8,6 @@ define(['./gallery'], function(gallery) {
   var IMAGES_WIDTH = 182;
   var IMAGES_HEIGHT = 182;
 
-  var container = document.querySelector('.pictures');
-
   var template = document.querySelector('#picture-template');
   var elementToClone;
   if ('content' in template) {
@@ -18,33 +16,44 @@ define(['./gallery'], function(gallery) {
     elementToClone = template.querySelector('.picture');
   }
 
-  function appendPicture(picture, pictureNumber) {
-    var pictureElem = elementToClone.cloneNode(true);
-    pictureElem.href = picture.url;
-    pictureElem.querySelector('.picture-comments').textContent = picture.comments;
-    pictureElem.querySelector('.picture-likes').textContent = picture.likes;
+  var Picture = function(pictureData, pictureNumber) {
+    var self = this;
+
+    self.data = pictureData;
+
+    self.element = elementToClone.cloneNode(true);
+    self.element.href = self.data.url;
+    self.element.querySelector('.picture-comments').textContent = self.data.comments;
+    self.element.querySelector('.picture-likes').textContent = self.data.likes;
+
+    self.onImageClick = function(ev) {
+      gallery.show(pictureNumber);
+      ev.preventDefault();
+    };
+
+    var imgElement = self.element.querySelector('img');
+
+    self.remove = function() {
+      imgElement.onclick = null;
+    };
 
     var img = new Image();
     img.onload = function() {
-      var imgElement = pictureElem.querySelector('img');
       imgElement.src = this.src;
       imgElement.width = IMAGES_WIDTH;
       imgElement.height = IMAGES_HEIGHT;
 
       imgElement.onclick = function(ev) {
-        gallery.show(pictureNumber);
-        // gallery.setActivePicture(pictureNumber);  // redundant
-
-        ev.preventDefault();
+        self.onImageClick(ev);
       };
     };
     img.onerror = function() {
-      pictureElem.classList.add('picture-load-failure');
+      self.element.classList.add('picture-load-failure');
     };
-    img.src = picture.url;
+    img.src = this.data.url;
 
-    container.appendChild(pictureElem);
-  }
+    return self;
+  };
 
-  return appendPicture;
+  return Picture;
 });
