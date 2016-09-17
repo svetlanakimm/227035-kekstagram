@@ -19,15 +19,15 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     filter.classList.remove('hidden');
   }
 
-  function loadPictures(pageNumber) {
+  function loadPictures(page) {
     load('/api/pictures', {
-      from: pageNumber * PAGE_SIZE,
-      to: (pageNumber + 1) * PAGE_SIZE,
+      from: page * PAGE_SIZE,
+      to: (page + 1) * PAGE_SIZE,
       filter: filter.querySelector(':checked').id
     }, function(data) {
       renderPictures(data);
       gallery.setPictures(data);
-    })
+    });
   }
 
   function removePictures() {
@@ -48,7 +48,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     scrollTimeout = setTimeout(loadOtherPictures, 100);
   });
 
-  filter.addEventListener('change', function(evt) {
+  filter.addEventListener('change', function() {
     pageNumber = 0;
     removePictures();
     loadPictures(pageNumber);
