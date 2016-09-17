@@ -3,6 +3,11 @@
 define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   var container = document.querySelector('.pictures');
   var filter = document.querySelector('.filters');
+  var footer = document.querySelector('footer');
+  var pageNumber = 0;
+  var PAGE_SIZE = 12;
+  var GAP = 80;
+
   filter.classList.add('hidden');
 
   function renderPictures(picturesData) {
@@ -14,9 +19,22 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     filter.classList.remove('hidden');
   }
 
-  load('/api/pictures', {}, function(data) {
-    renderPictures(data);
-    gallery.setPictures(data);
+  function loadPictures(pageNumber) {
+    load('/api/pictures', {
+      from: pageNumber * PAGE_SIZE,
+      to: (pageNumber + 1) * PAGE_SIZE
+    }, function(data) {
+      renderPictures(data);
+      gallery.setPictures(data);
+    })
+  }
+
+  window.addEventListener('scroll', function(evt) {
+    if (footer.getBoundingClientRect().bottom - window.innerHeight < GAP) {
+      loadPictures(pageNumber++);
+    }
   });
+
+  loadPictures(0);
 });
 
