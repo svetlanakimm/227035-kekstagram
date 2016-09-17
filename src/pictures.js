@@ -8,6 +8,14 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   var PAGE_SIZE = 12;
   var GAP = 80;
 
+  if (localStorage && localStorage.getItem('filter')) {
+    var currentFilter = localStorage.getItem('filter');
+    loadPictures(pageNumber, currentFilter);
+    document.getElementById(currentFilter).checked = true;
+  } else {
+    loadPictures(pageNumber, '');
+  }
+
   filter.classList.add('hidden');
 
   function renderPictures(picturesData) {
@@ -19,11 +27,11 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     filter.classList.remove('hidden');
   }
 
-  function loadPictures(page) {
+  function loadPictures(page, filter) {
     load('/api/pictures', {
       from: page * PAGE_SIZE,
       to: (page + 1) * PAGE_SIZE,
-      filter: filter.querySelector(':checked').id
+      filter: filter
     }, function(data) {
       renderPictures(data);
       gallery.setPictures(data);
@@ -34,6 +42,12 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     while (picturesContainer.firstChild) {
       picturesContainer.removeChild(picturesContainer.firstChild);
     }
+  }
+
+  function reloadPictures(filter){
+    pageNumber = 0;
+    removePictures();
+    loadPictures(pageNumber, filter);
   }
 
   var scrollTimeout;
@@ -49,11 +63,11 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   });
 
   filter.addEventListener('change', function() {
-    pageNumber = 0;
-    removePictures();
-    loadPictures(pageNumber);
+    var currentFilter = filter.querySelector(':checked').id;
+    if (localStorage) {
+      localStorage.setItem('filter', currentFilter);
+    }
+    reloadPictures(currentFilter);
   }, true);
-
-  loadPictures(0);
 });
 
