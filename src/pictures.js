@@ -2,21 +2,22 @@
 
 define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   var picturesContainer = document.querySelector('.pictures');
-  var filter = document.querySelector('.filters');
-  var footer = document.querySelector('footer');
+  var filterElement = document.querySelector('.filters');
+  var footerElement = document.querySelector('footer');
   var pageNumber = 0;
   var PAGE_SIZE = 12;
   var GAP = 80;
+  var currentFilter;
 
   if (localStorage && localStorage.getItem('filter')) {
-    var currentFilter = localStorage.getItem('filter');
+    currentFilter = localStorage.getItem('filter');
     loadPictures(pageNumber, currentFilter);
     document.getElementById(currentFilter).checked = true;
   } else {
     loadPictures(pageNumber, '');
   }
 
-  filter.classList.add('hidden');
+  filterElement.classList.add('hidden');
 
   function renderPictures(picturesData) {
     picturesData.forEach(function(pictureData, i) {
@@ -24,7 +25,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
       picturesContainer.appendChild(picture.element);
     });
 
-    filter.classList.remove('hidden');
+    filterElement.classList.remove('hidden');
   }
 
   function loadPictures(page, filter) {
@@ -44,7 +45,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     }
   }
 
-  function reloadPictures(filter){
+  function reloadPictures(filter) {
     pageNumber = 0;
     removePictures();
     loadPictures(pageNumber, filter);
@@ -52,7 +53,7 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
 
   var scrollTimeout;
   function loadOtherPictures() {
-    if (footer.getBoundingClientRect().bottom - window.innerHeight < GAP) {
+    if (footerElement.getBoundingClientRect().bottom - window.innerHeight < GAP) {
       loadPictures(pageNumber++);
     }
   }
@@ -62,8 +63,8 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
     scrollTimeout = setTimeout(loadOtherPictures, 100);
   });
 
-  filter.addEventListener('change', function() {
-    var currentFilter = filter.querySelector(':checked').id;
+  filterElement.addEventListener('change', function() {
+    currentFilter = filterElement.querySelector(':checked').id;
     if (localStorage) {
       localStorage.setItem('filter', currentFilter);
     }
