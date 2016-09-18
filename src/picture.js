@@ -17,42 +17,49 @@ define(['./gallery'], function(gallery) {
   }
 
   var Picture = function(pictureData, pictureNumber) {
-    var self = this;
+    this.data = pictureData;
+    this.pictureNumber = pictureNumber;
 
-    self.data = pictureData;
+    this.element = elementToClone.cloneNode(true);
+    this.element.href = this.data.url;
+    this.imgElement = this.element.querySelector('img');
 
-    self.element = elementToClone.cloneNode(true);
-    self.element.href = self.data.url;
-    self.element.querySelector('.picture-comments').textContent = self.data.comments;
-    self.element.querySelector('.picture-likes').textContent = self.data.likes;
+    this.element.querySelector('.picture-comments').textContent = this.data.comments;
+    this.element.querySelector('.picture-likes').textContent = this.data.likes;
 
-    self.onImageClick = function(ev) {
-      gallery.show(pictureNumber);
-      ev.preventDefault();
-    };
+    this.onImageClick = this.onImageClick.bind(this);
+    this.onImageLoaded = this.onImageLoaded.bind(this);
+    this.onImageLoadError = this.onImageLoadError.bind(this);
 
-    var imgElement = self.element.querySelector('img');
+    this.image = new Image();
+    this.image.addEventListener('load', this.onImageLoaded);
+    this.image.addEventListener('error', this.onImageLoadError);
+    this.image.src = this.data.url;
 
-    self.remove = function() {
-      imgElement.onclick = null;
-    };
+    return this;
+  };
 
-    var img = new Image();
-    img.onload = function() {
-      imgElement.src = this.src;
-      imgElement.width = IMAGES_WIDTH;
-      imgElement.height = IMAGES_HEIGHT;
+  Picture.prototype.onImageLoaded = function(ev) {
+    this.imgElement.src = ev.target.src;  // Image object source
+    this.imgElement.width = IMAGES_WIDTH;
+    this.imgElement.height = IMAGES_HEIGHT;
 
-      imgElement.onclick = function(ev) {
-        self.onImageClick(ev);
-      };
-    };
-    img.onerror = function() {
-      self.element.classList.add('picture-load-failure');
-    };
-    img.src = this.data.url;
+    this.imgElement.addEventListener('click', this.onImageClick);
+  };
 
-    return self;
+  Picture.prototype.onImageLoadError = function() {
+    this.element.classList.add('picture-load-failure');
+  };
+
+  Picture.prototype.onImageClick = function(ev) {
+    gallery.show(this.pictureNumber);
+    ev.preventDefault();
+  };
+
+  Picture.prototype.remove = function() {
+    this.imgElement.removeEventListener('click', this.onImageClick);
+    this.image.removeEventListener('load', this.onImageLoaded);
+    this.image.removeEventListener('error', this.onImageLoadError);
   };
 
   return Picture;

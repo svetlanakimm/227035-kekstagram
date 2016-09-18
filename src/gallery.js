@@ -13,6 +13,10 @@ define(function() {
     this.pictures = [];
     this.activePicture = 0;
 
+    this.hide = this.hide.bind(this);
+    this.nextPicture = this.nextPicture.bind(this);
+    this.bindHandlers();
+
     return this;
   };
 
@@ -38,26 +42,23 @@ define(function() {
     this.setActivePicture(num);
   };
 
+  Gallery.prototype.nextPicture = function() {
+    if (this.activePicture === this.pictures.length - 1) {
+      this.activePicture = 0;
+    } else {
+      this.activePicture += 1;
+    }
+    this.setActivePicture(this.activePicture);
+  };
+
   Gallery.prototype.bindHandlers = function() {
-    var self = this;
-
-    this.close.onclick = function() {
-      return self.hide();
-    };
-
-    this.image.onclick = function() {
-      if (self.activePicture === self.pictures.length - 1) {
-        self.activePicture = 0;
-      } else {
-        self.activePicture += 1;
-      }
-      self.setActivePicture(self.activePicture);
-    };
+    this.close.addEventListener('click', this.hide);
+    this.image.addEventListener('click', this.nextPicture);
   };
 
   Gallery.prototype.unbindHandlers = function() {
-    this.image.onclick = null;
-    this.close.onclick = null;
+    this.image.removeEventListener('click', this.hide);
+    this.close.removeEventListener('click', this.nextPicture);
   };
 
   return new Gallery();
