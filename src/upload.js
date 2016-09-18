@@ -319,7 +319,7 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
     browserCookies.set('upload-filter', selectedFilter, { expires: getDaysFromLastHoppersBDay() });
   });
 
-  window.addEventListener('resizerchange', function(evt) {
+  window.addEventListener('resizerchange', function() {
     var constraint = currentResizer.getConstraint();
     resizeX.value = constraint.x;
     resizeY.value = constraint.y;
