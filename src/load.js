@@ -5,14 +5,23 @@
 'use strict';
 
 define(function() {
-  function jSONPRequest(url, callback) {
-    var script = document.createElement('script');
-    script.src = url + '?callback=JSONPCallback';
-    window.JSONPCallback = function(data) {
+  function load(url, params, callback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function(evt) {
+      var requestObj = evt.target;
+      var response = requestObj.response;
+      var data = JSON.parse(response);
       callback(data);
     };
-    document.head.appendChild(script);
-  }
 
-  return jSONPRequest;
+    xhr.open('GET', url +
+      '?from=' + (params.from || 0) +
+      '&to=' + (params.to || Infinity) +
+      '&filter=' + (params.filter || 'default')
+    );
+
+    xhr.send();
+  }
+  return load;
 });
