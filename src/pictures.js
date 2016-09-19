@@ -67,3 +67,4 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   }, true);
 });
 
+
