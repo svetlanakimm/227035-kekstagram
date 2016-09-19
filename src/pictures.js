@@ -7,15 +7,10 @@ define(['./load', './picture', './gallery'], function(load, Picture, gallery) {
   var pageNumber = 0;
   var PAGE_SIZE = 12;
   var GAP = 80;
-  var currentFilter;
 
-  if (localStorage && localStorage.getItem('filter')) {
-    currentFilter = localStorage.getItem('filter');
-    loadPictures(pageNumber, currentFilter);
-    document.getElementById(currentFilter).checked = true;
-  } else {
-    loadPictures(pageNumber, '');
-  }
+  var currentFilter = localStorage.getItem('filter') || 'filter-popular';
+  loadPictures(pageNumber, currentFilter);
+  document.querySelector('#' + currentFilter).checked = true;
 
   filterElement.classList.add('hidden');
 
