@@ -76,10 +76,10 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
 
   function resizeFormIsValid() {
     if( !(
-          ( +resizeX.value >= 0 && +resizeY.value >= 0 && +resizeSize.value >= 0 ) &&
-          ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
-          ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
-          )) {
+      ( +resizeX.value >= 0 && +resizeY.value >= 0 && +resizeSize.value >= 0 ) &&
+        ( +resizeX.value + +resizeSize.value <= +currentResizer._image.naturalWidth ) &&
+        ( +resizeY.value + +resizeSize.value <= +currentResizer._image.naturalHeight )
+      )) {
       resizeButtonFwd.disabled = true;
       return false;
     }else{
