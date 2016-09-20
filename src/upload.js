@@ -329,3 +329,4 @@ define(['browser-cookies', './resizer'], function(browserCookies, Resizer) {
   cleanupResizer();
   updateBackground();
 });
+
